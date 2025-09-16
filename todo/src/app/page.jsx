@@ -5,6 +5,7 @@ import { InputContainer } from "./components/InputContainer";
 import { Tasks } from "./components/Tasks";
 import { Button } from "./components/Button";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const [inputVal, setInputVal] = useState("");
@@ -16,17 +17,20 @@ export default function Home() {
   };
 
   const clickHandler = () => {
-    setTask([...tasks, inputVal]);
-    console.log(tasks);
+    setTask([
+      ...tasks,
+      {
+        id: uuidv4(),
+        nametxt: inputVal,
+        completed: false,
+      },
+    ]);
     setInputVal("");
+    console.log(tasks);
   };
 
-  const deleteHandler = (index) => {
-    setTask(tasks.filter((_, i) => i !== index));
-  };
-
-  const activeFilter = () => {
-    setTask;
+  const deleteHandler = (id) => {
+    setTask(tasks.filter((_, i) => i !== id));
   };
 
   return (
@@ -51,13 +55,13 @@ export default function Home() {
             <Button btnColor="gray">Completed</Button>
           </div>
           {tasks.length > 0 ? (
-            tasks.map((el, index) => {
+            tasks.map((el, id) => {
               return (
                 <Tasks
-                  key={index}
-                  task={el}
+                  key={id}
+                  task={el.nametxt}
                   deleteHandler={() => {
-                    deleteHandler(index);
+                    deleteHandler(id);
                   }}
                 />
               );
